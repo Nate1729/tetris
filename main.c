@@ -27,11 +27,17 @@ void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
   glViewport(0, 0, width, height);
 }
 
-int main() {
+/* Initial game and return active window.
+ * - Initialize GLFW,
+ * - Setup OPENGL with VERSION 3.3
+ * - Create Window
+ * - Setup glad
+ */
+GLFWwindow *init() {
   printf("Initializing glfw.\n");
   if (!glfwInit()) {
     fprintf(stderr, "glfw3 initalization failed! Exiting early.\n");
-    return EXIT_FAILURE;
+    exit(EXIT_FAILURE);
   }
 
   glfwSetErrorCallback(error_callback);
@@ -43,7 +49,7 @@ int main() {
   if (!window) {
     fprintf(stderr, "Error, couldn't create window. Exiting Early\n");
     glfwTerminate();
-    return EXIT_FAILURE;
+    exit(EXIT_FAILURE);
   }
 
   glfwMakeContextCurrent(window);
@@ -59,9 +65,17 @@ int main() {
   /* glad: Load opengl function ptrs */
   if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
     fprintf(stderr, "Failed to initialize GLAD\n");
+    glfwDestroyWindow(window);
     glfwTerminate();
-    return EXIT_FAILURE;
+    exit(EXIT_FAILURE);
   }
+
+  return window;
+}
+
+int main() {
+  GLFWwindow *window = init();
+
   while (!glfwWindowShouldClose(window)) {
     /* GAME LOOP */
     glfwSwapBuffers(window);

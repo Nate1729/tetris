@@ -4,12 +4,14 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 project(tetris C)
 
-add_executable(${PROJECT_NAME} main.c)
+add_executable(${PROJECT_NAME} main.c glad.c)
 
 add_subdirectory(external/glfw)
 
+
 target_include_directories(${PROJECT_NAME}
   PUBLIC external/glfw/include
+  PUBLIC include/
 )
 
 target_link_directories(${PROJECT_NAME}

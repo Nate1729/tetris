@@ -1,0 +1,1 @@
+/usr/bin/cc CMakeFiles/primer.dir/main.c.o -o primer   -L/home/nate1729/dev/tetris/external/glfw/src  -Wl,-rpath,/home/nate1729/dev/tetris/external/glfw/src external/glfw/src/libglfw3.a /usr/lib/librt.a -lm -ldl 

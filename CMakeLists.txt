@@ -1,12 +1,12 @@
 cmake_minimum_required(VERSION 3.27.7)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY out/build/)
 
 project(tetris C)
 
-add_executable(${PROJECT_NAME} main.c glad.c)
-
 add_subdirectory(external/glfw)
+add_subdirectory(src)
 
 
 target_include_directories(${PROJECT_NAME}

@@ -100,7 +100,6 @@ int create_vertex_shader(unsigned int *shader, const char *shader_source) {
   char infoLog[512];
   unsigned int new_shader;
 
-  fprintf(stdout, "Creating vertex shader\n");
   new_shader = glCreateShader(GL_VERTEX_SHADER);
   glShaderSource(new_shader, 1, &shader_source, NULL);
   glCompileShader(new_shader);
@@ -115,7 +114,6 @@ int create_vertex_shader(unsigned int *shader, const char *shader_source) {
     return 0;
   }
 
-  fprintf(stdout, "Vertex shader creation was successful\n");
   *shader = new_shader;
   return 1;
 }
@@ -129,7 +127,6 @@ int create_fragment_shader(unsigned int *shader, const char *shader_source) {
   char infoLog[512];
   unsigned int new_shader;
 
-  fprintf(stdout, "Creating fragment shader\n");
   new_shader = glCreateShader(GL_FRAGMENT_SHADER);
   glShaderSource(new_shader, 1, &shader_source, NULL);
   glCompileShader(new_shader);
@@ -145,7 +142,6 @@ int create_fragment_shader(unsigned int *shader, const char *shader_source) {
     return 0;
   }
 
-  fprintf(stdout, "Fragment shader creation was successful\n");
   *shader = new_shader;
   return 1;
 }

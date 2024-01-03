@@ -5,8 +5,12 @@
  */
 #define GLFW_INCLUDE_NONE
 
+/* 3rd Party imports */
 #include <GLFW/glfw3.h>
 #include <glad.h>
+
+/* Local imports */
+#include "shader.h"
 
 /* Error callback for GLFW. When an error occurs this
  * function will be called
@@ -91,108 +95,19 @@ void clean_up(GLFWwindow *window) {
   glfwTerminate();
 }
 
-/* Create a vertex shader and compile it.
- * RETURNS 1 on success and 0 on failure.
- *
- */
-int create_vertex_shader(unsigned int *shader, const char *shader_source) {
-  int success;
-  char infoLog[512];
-  unsigned int new_shader;
-
-  new_shader = glCreateShader(GL_VERTEX_SHADER);
-  glShaderSource(new_shader, 1, &shader_source, NULL);
-  glCompileShader(new_shader);
-
-  // Error Checking
-  glGetShaderiv(new_shader, GL_COMPILE_STATUS, &success);
-  if (!success) {
-    glGetShaderInfoLog(new_shader, 512, NULL, infoLog);
-    fprintf(stderr,
-            "Error -- Couldn't create vertex shader. Compilation Failed\n%s\n",
-            infoLog);
-    return 0;
-  }
-
-  *shader = new_shader;
-  return 1;
-}
-
-/* Create a fragment shader and compile it.
- * RETURNS 1 on success and 0 on failure.
- *
- */
-int create_fragment_shader(unsigned int *shader, const char *shader_source) {
-  int success;
-  char infoLog[512];
-  unsigned int new_shader;
-
-  new_shader = glCreateShader(GL_FRAGMENT_SHADER);
-  glShaderSource(new_shader, 1, &shader_source, NULL);
-  glCompileShader(new_shader);
-
-  // Error Checking
-  glGetShaderiv(new_shader, GL_COMPILE_STATUS, &success);
-  if (!success) {
-    glGetShaderInfoLog(new_shader, 512, NULL, infoLog);
-    fprintf(
-        stderr,
-        "Error -- Couldn't create fragment shader. Compilation Failed\n%s\n",
-        infoLog);
-    return 0;
-  }
-
-  *shader = new_shader;
-  return 1;
-}
-
 int main() {
   GLFWwindow *window = init();
-
-  /* Creating Vertex Shader */
-  unsigned int vertexShader, fragmentShader;
-  int success;
-  char infoLog[512];
-  if (!create_vertex_shader(&vertexShader, vertexShaderSource)) {
-    fprintf(stderr, "Issue creating vertexShader, exiting early\n");
-    clean_up(window);
-    exit(EXIT_FAILURE);
-  }
-
-  if (!create_fragment_shader(&fragmentShader, fragmentShaderSouce)) {
-    fprintf(stderr, "Issue creating fragmentShader, exiting early\n");
-    glDeleteShader(vertexShader);
-    clean_up(window);
-    exit(EXIT_FAILURE);
-  }
-
-  /* Creating Shader Program */
-  unsigned int shaderProgram;
-  shaderProgram = glCreateProgram();
-  glAttachShader(shaderProgram, vertexShader);
-  glAttachShader(shaderProgram, fragmentShader);
-  glLinkProgram(shaderProgram);
-  glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-
-  /*Whether or not we are successful
-   * we no longer need the shaders.
-   */
-  glDeleteShader(vertexShader);
-  glDeleteShader(fragmentShader);
-  if (!success) {
-    glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-    fprintf(stderr, "ERROR::SHADER::PROGRAM\nCouldn't create program\n%s\n",
-            infoLog);
-
-    clean_up(window);
-    exit(EXIT_FAILURE);
-  }
+  int foo = 1;
+  unsigned int shader_program = create_shader_program_from_files(
+      "shaders/simple.vshader", "shaders/orange.fshader");
 
   /*Vertex data
    */
-  float vertices[] = {-0.5f, -0.5f, 0.0f, /*Left*/
-                      0.5f,  -0.5f, 0.0f, /* Right */
-                      0.0f,  0.5f,  0.f /* Top */};
+  float vertices[] = {
+      -0.8f, -0.8f, 0.0f, /*Left*/
+      -0.2f, -0.8f, 0.0f, /* Right */
+      -0.8f, 0.8f,  0.0f, /* Top */
+  };
   unsigned int VBO, VAO;
   // Bind Vertex Array Object (VAO)
   glGenVertexArrays(1, &VAO);
@@ -218,7 +133,7 @@ int main() {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    glUseProgram(shaderProgram);
+    glUseProgram(shader_program);
     glBindVertexArray(VAO);
     glDrawArrays(GL_TRIANGLES, 0, 3);
 
@@ -228,7 +143,7 @@ int main() {
 
   glDeleteVertexArrays(1, &VAO);
   glDeleteBuffers(1, &VBO);
-  glDeleteProgram(shaderProgram);
+  glDeleteProgram(shader_program);
   glfwDestroyWindow(window);
   glfwTerminate();
   return EXIT_SUCCESS;

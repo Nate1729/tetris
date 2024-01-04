@@ -99,14 +99,15 @@ int main() {
   GLFWwindow *window = init();
   int foo = 1;
   unsigned int shader_program = create_shader_program_from_files(
-      "shaders/simple.vshader", "shaders/orange.fshader");
+      "shaders/simple.vshader", "shaders/mapped.fshader");
 
   /*Vertex data
    */
   float vertices[] = {
-      -0.8f, -0.8f, 0.0f, /*Left*/
-      -0.2f, -0.8f, 0.0f, /* Right */
-      -0.8f, 0.8f,  0.0f, /* Top */
+      /* positions        colors */
+      -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, /*Left*/
+      0.5f,  -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, /* Right */
+      0.0f,  0.5f,  0.0f, 0.0f, 0.0f, 1.0f  /* Top */
   };
   unsigned int VBO, VAO;
   // Bind Vertex Array Object (VAO)
@@ -118,9 +119,13 @@ int main() {
   // Copy vertices in array to the vertex buffer object (VBO)
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
   glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-  // Finally, set VAO pointers
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
+  // Position attribute
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *)0);
   glEnableVertexAttribArray(0);
+  // color attribute
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float),
+                        (void *)(3 * sizeof(float)));
+  glEnableVertexAttribArray(1);
 
   // Other stuff -- Not sure what this does
   glBindBuffer(GL_ARRAY_BUFFER, 0);

@@ -98,7 +98,7 @@ void clean_up(GLFWwindow *window) {
 int main() {
   GLFWwindow *window = init();
   int foo = 1;
-  unsigned int shader_program = create_shader_program_from_files(
+  ShaderProgram shader_program = shader_program_create_from_files(
       "shaders/simple.vshader", "shaders/mapped.fshader");
 
   /*Vertex data

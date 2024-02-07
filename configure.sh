@@ -9,3 +9,4 @@ cmake -S . -B out/build \
 	-DGLFW_BUILD_DOCS=OFF &&
 	cp out/build/compile_commands.json . &&
 	cp -r shaders/ out/build/
+cp container.jpg out/build/
